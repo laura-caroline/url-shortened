@@ -90,18 +90,21 @@ export class AuthService {
     }
   }
 
-  async validateUser(email: string, password: string) {
+  async validateUser(email: string, passwordInput: string) {
     const user = await this.userService.findByEmail(email);
 
     if (!user) {
       throw new UnauthorizedException('E-mail e/ou senha inválidos');
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (isPasswordValid) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...userWithoutPassword } = user;
-      return userWithoutPassword;
+    const isPasswordValid = await bcrypt.compare(passwordInput, user.password);
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('E-mail e/ou senha inválidos');
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 }

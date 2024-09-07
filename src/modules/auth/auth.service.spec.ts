@@ -216,12 +216,16 @@ describe('AuthService', () => {
         password: 'hashed_password',
       } as UserEntity;
 
+      // Simula a função `findByEmail` retornando um usuário válido
       mockUserService.findByEmail.mockResolvedValueOnce(mockUser);
+
+      // Simula a função `bcrypt.compare` retornando `false` (senha inválida)
       jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(false);
 
+      // Testa se o `UnauthorizedException` é lançado quando a senha é inválida
       await expect(
         authService.validateUser('test@example.com', 'password123')
-      ).rejects.toThrow(UnauthorizedException);
+      ).rejects.toThrow(UnauthorizedException); // Verifica se o erro correto é lançado
     });
   });
 });

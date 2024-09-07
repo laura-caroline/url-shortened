@@ -11,12 +11,12 @@ jest.mock('src/utils/handlerError', () => ({
 }));
 
 describe('UserController', () => {
-  let controller: UserController; // Usando a subclasse
+  let controller: UserController;
   let userService: UserService;
   let response: Response;
 
   const mockUserService = {
-    createAsync: jest.fn(),
+    createUser: jest.fn(),
   };
 
   const mockResponse = () => {
@@ -67,10 +67,14 @@ describe('UserController', () => {
         name: 'John Doe',
       };
 
+      // Simula um erro ao chamar o método createUser
       jest
         .spyOn(userService, 'createUser')
         .mockRejectedValueOnce(new Error('Error'));
+
       await controller.createAsync(response, userCreateDto);
+
+      // Verifica se handleError foi chamado com o erro correto
       expect(handleError).toHaveBeenCalledWith(response, expect.any(Error));
     });
   });

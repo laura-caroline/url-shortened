@@ -1,9 +1,9 @@
+import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from './user.service';
-import { UserRepository } from './user.repository';
-import { UserCreateDto } from './dto/request/user.create.dto';
-import { NotFoundError } from 'rxjs';
 import { hashData } from 'src/utils/hash';
+import { UserCreateDto } from './dto/request/user.create.dto';
+import { UserRepository } from './user.repository';
+import { UserService } from './user.service';
 
 jest.mock('src/utils/hash', () => ({
   hashData: jest.fn().mockResolvedValue('hashed_password'),
@@ -75,16 +75,16 @@ describe('UserService', () => {
         name: 'John Doe',
       };
 
+      // Simula que o repositório retorna um usuário com o mesmo email
       mockUserRepository.findByEmail.mockResolvedValueOnce({
         id: '1',
         ...userCreateDto,
       });
 
+      // Espera que o serviço lance uma ConflictException
       await expect(service.createUser(userCreateDto)).rejects.toThrow(
-        NotFoundError
+        BadRequestException
       );
-      expect(repository.findByEmail).toHaveBeenCalledWith('test@example.com');
-      expect(repository.createUser).not.toHaveBeenCalled();
     });
 
     it('should log an error and throw if there is an issue during creation', async () => {

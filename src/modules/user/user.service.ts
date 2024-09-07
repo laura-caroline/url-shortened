@@ -1,9 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { UserRepository } from './user.repository';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { hashData } from 'src/utils/hash';
 import { UserCreateDto } from './dto/request/user.create.dto';
 import { UserEntity } from './entities/user.entity';
-import { NotFoundError } from 'rxjs';
-import { hashData } from 'src/utils/hash';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
@@ -18,7 +17,7 @@ export class UserService {
       );
 
       if (alreadyExistsUserThisEmail) {
-        throw new NotFoundError(
+        throw new BadRequestException(
           `Usuário já existe com esse email ${data.email}`
         );
       }

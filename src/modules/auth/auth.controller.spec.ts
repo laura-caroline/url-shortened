@@ -7,6 +7,7 @@ import { handleError } from 'src/utils/handlerError';
 import { LoginDto } from './dto/request/login.dto';
 import { RefreshTokenDto } from './dto/request/updateRefreshToken.dto';
 import { UserToken } from '../user/dto/response/userToken.dto';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 jest.mock('src/utils/handlerError', () => ({
   handleError: jest.fn(),
@@ -39,7 +40,10 @@ describe('AuthController', () => {
           useValue: mockAuthService,
         },
       ],
-    }).compile();
+    })
+      .overrideGuard(ThrottlerGuard) // Mocka o ThrottlerGuard
+      .useValue({ canActivate: jest.fn(() => true) }) // Faz com que ele sempre retorne verdadeiro
+      .compile();
 
     controller = module.get<AuthController>(AuthController);
     authService = module.get<AuthService>(AuthService);

@@ -4,6 +4,7 @@ import { ShortenedUrlService } from './shortened-url.service';
 import { Response } from 'express';
 import { UserEntity } from '../user/entities/user.entity';
 import { handleError } from 'src/utils/handlerError'; // ES6 import para handleError
+import { UpdateShortenedUrlDto } from './dto/request/update-shortened-url.dto';
 
 jest.mock('src/utils/handlerError', () => ({
   handleError: jest.fn(),
@@ -114,9 +115,9 @@ describe('ShortenedUrlController', () => {
   describe('updateUrlOriginByUser', () => {
     it('should update the shortened URL and return status 200', async () => {
       const mockUser: UserEntity = { id: '1' } as UserEntity;
-      const updateShortenedUrlDto = {
+      const updateShortenedUrlDto: UpdateShortenedUrlDto = {
         idShortenedUrl: '1',
-        urlOrigin: 'newUrl',
+        originalUrl: 'newUrl',
       };
 
       await controller.updateUrlOriginByUser(
@@ -127,7 +128,7 @@ describe('ShortenedUrlController', () => {
       );
       expect(service.updateUrlOriginByUser).toHaveBeenCalledWith(mockUser.id, {
         idShortenedUrl: 'shortenedUrlId',
-        urlOrigin: 'newUrl',
+        originalUrl: 'newUrl',
       });
       expect(response.status).toHaveBeenCalledWith(200);
     });

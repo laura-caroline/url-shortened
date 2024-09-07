@@ -113,7 +113,12 @@ describe('ShortenedUrlService', () => {
 
   describe('updateNumberAccessUrl', () => {
     it('should update access count for a shortened URL', async () => {
-      const mockUrl = { shortUrl: 'abc123', countAccessUrl: 0, id: '1' };
+      const mockUrl = {
+        shortUrl: 'abc123',
+        countAccessUrl: 0,
+        id: '1',
+        idShortenedUrl: '1',
+      };
       mockShortenedUrlRepository.findByShortUrl.mockResolvedValueOnce(mockUrl);
 
       await service.updateNumberAccessUrl('abc123');
@@ -147,7 +152,7 @@ describe('ShortenedUrlService', () => {
       expect(repository.findByIdByUser).toHaveBeenCalledWith('1', 'abc123');
       expect(repository.updateUrlOriginByUser).toHaveBeenCalledWith('1', {
         idShortenedUrl: 'abc123',
-        urlOrigin: 'http://new-url.com',
+        originalUrl: 'http://new-url.com',
       });
     });
 
