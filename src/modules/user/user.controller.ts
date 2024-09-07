@@ -29,10 +29,7 @@ export class UserController {
   @ApiExceptionResponse()
   @Post()
   @IsPublic()
-  protected async createAsync(
-    @Res() response: Response,
-    @Body() dto: UserCreateDto
-  ) {
+  async createAsync(@Res() response: Response, @Body() dto: UserCreateDto) {
     try {
       await this.userService.createUser(dto);
       return response.status(HttpStatus.CREATED).send();
