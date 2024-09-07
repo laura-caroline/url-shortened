@@ -2,12 +2,12 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
-import { AuthGuard } from "@nestjs/passport";
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { AuthGuard } from '@nestjs/passport';
 
-import { IS_PUBLIC_KEY } from "../decorators/is-public.decorator";
-import { UnauthorizedError } from "../errors/unauthorized.error";
+import { IS_PUBLIC_KEY } from '../decorators/is-public.decorator';
+import { UnauthorizedError } from '../errors/unauthorized.error';
 
 /**
  * Authentication guard for JWT tokens.
@@ -21,7 +21,7 @@ import { UnauthorizedError } from "../errors/unauthorized.error";
  * If validation fails, it throws an UnauthorizedException.
  */
 @Injectable()
-export class AtGuard extends AuthGuard("jwt") {
+export class AtGuard extends AuthGuard('jwt') {
   constructor(private reflector: Reflector) {
     super();
   }
@@ -38,7 +38,7 @@ export class AtGuard extends AuthGuard("jwt") {
 
     const canActivate = super.canActivate(context);
 
-    if (typeof canActivate === "boolean") {
+    if (typeof canActivate === 'boolean') {
       return canActivate;
     }
 

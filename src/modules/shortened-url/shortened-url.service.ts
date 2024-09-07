@@ -1,9 +1,9 @@
-import { Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { UserService } from "../user/user.service";
-import { CreateShortenedUrlDto } from "./dto/request/create-shortened-url.dto";
-import { UpdateShortenedUrlDto } from "./dto/request/update-shortened-url.dto";
-import { ShortenedUrlRepository } from "./shortened-url.repository";
-import { generateRandomLetters } from "src/utils/generateRandomLetters";
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { UserService } from '../user/user.service';
+import { CreateShortenedUrlDto } from './dto/request/create-shortened-url.dto';
+import { UpdateShortenedUrlDto } from './dto/request/update-shortened-url.dto';
+import { ShortenedUrlRepository } from './shortened-url.repository';
+import { generateRandomLetters } from 'src/utils/generateRandomLetters';
 
 @Injectable()
 export class ShortenedUrlService {
@@ -72,7 +72,7 @@ export class ShortenedUrlService {
 
     if (!alreadyExistShortenedUrl) {
       this.logger.debug(`URL encurtada ${shortUrl} não foi encontrada`);
-      throw new NotFoundException("URL encurtada não foi encontrada");
+      throw new NotFoundException('URL encurtada não foi encontrada');
     }
 
     const dataUpdate = {
@@ -102,7 +102,7 @@ export class ShortenedUrlService {
         this.logger.debug(
           `URL encurtada com id ${updateShortenedUrlDto.idShortenedUrl} utilizando o usuário ${userId} não foi encontrada`
         );
-        throw new NotFoundException("URL encurtada não foi encontrada");
+        throw new NotFoundException('URL encurtada não foi encontrada');
       }
       return await this.shortenedUrlRepository.updateUrlOriginByUser(
         userId,
@@ -128,7 +128,7 @@ export class ShortenedUrlService {
         this.logger.debug(
           `URL encurtada com id ${shortenedUrlId} utilizando o usuário ${userId} não foi encontrada`
         );
-        throw new NotFoundException("URL encurtada não foi encontrada");
+        throw new NotFoundException('URL encurtada não foi encontrada');
       }
       return await this.shortenedUrlRepository.deleteShortenedUrlByUser(
         userId,

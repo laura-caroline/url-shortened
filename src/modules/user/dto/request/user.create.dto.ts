@@ -4,9 +4,8 @@ import {
   IsNotEmpty,
   IsString,
   Matches,
-  MaxLength
+  MaxLength,
 } from 'class-validator';
-
 
 export class UserCreateDto {
   @ApiProperty({

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, Matches, MaxLength } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class RefreshTokenDto {
   @IsNotEmpty()

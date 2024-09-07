@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: 12345678
       POSTGRES_DB: database
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
@@ -18,10 +18,10 @@ services:
       dockerfile: Dockerfile
     container_name: nest-app
     environment:
-      DATABASE_URL: "postgresql://postgres:12345678@db:5432/database"
-      JWT_SECRET: "yoursecret"
+      DATABASE_URL: 'postgresql://postgres:12345678@db:5432/database'
+      JWT_SECRET: 'yoursecret'
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - db
     networks:

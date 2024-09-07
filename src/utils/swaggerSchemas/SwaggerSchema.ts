@@ -3,7 +3,7 @@ import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiInternalServerErrorResponse,
-  ApiNotFoundResponse
+  ApiNotFoundResponse,
 } from '@nestjs/swagger';
 
 import {
@@ -24,5 +24,5 @@ export const ApiExceptionResponse = () =>
     ApiInternalServerErrorResponse({
       type: InternalServerErrorResponse,
       description: 'Internal Server Error',
-    }),
+    })
   );

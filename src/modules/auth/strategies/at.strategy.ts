@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
-import { ExtractJwt, Strategy } from "passport-jwt";
-import { UserEntity } from "src/modules/user/entities/user.entity";
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 /**
  * Passport strategy for JWT-based authentication.
@@ -14,7 +14,7 @@ import { UserEntity } from "src/modules/user/entities/user.entity";
  * the token's signature.
  */
 @Injectable()
-export class AtStrategy extends PassportStrategy(Strategy, "jwt") {
+export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

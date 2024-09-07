@@ -8,17 +8,17 @@ import {
   Patch,
   Post,
   Res,
-} from "@nestjs/common";
-import { Response } from "express";
-import { handleError } from "src/utils/handlerError";
-import { AuthenticatedUser } from "../auth/decorators/current-user.decorator";
-import { IsPublic } from "../auth/decorators/is-public.decorator";
-import { UserEntity } from "../user/entities/user.entity";
-import { CreateShortenedUrlDto } from "./dto/request/create-shortened-url.dto";
-import { UpdateShortenedUrlDto } from "./dto/request/update-shortened-url.dto";
-import { ShortenedUrlService } from "./shortened-url.service";
+} from '@nestjs/common';
+import { Response } from 'express';
+import { handleError } from 'src/utils/handlerError';
+import { AuthenticatedUser } from '../auth/decorators/current-user.decorator';
+import { IsPublic } from '../auth/decorators/is-public.decorator';
+import { UserEntity } from '../user/entities/user.entity';
+import { CreateShortenedUrlDto } from './dto/request/create-shortened-url.dto';
+import { UpdateShortenedUrlDto } from './dto/request/update-shortened-url.dto';
+import { ShortenedUrlService } from './shortened-url.service';
 
-@Controller("shortenedUrl")
+@Controller('shortenedUrl')
 export class ShortenedUrlController {
   constructor(private readonly shortenedUrlService: ShortenedUrlService) {}
 
@@ -35,11 +35,11 @@ export class ShortenedUrlController {
       return handleError(response, err);
     }
   }
-  @Get(":shortUrl")
+  @Get(':shortUrl')
   @IsPublic()
   async redirectAndUpdateNumbersAccessUrl(
     @Res() response: Response,
-    @Param("shortUrl") shortUrl: string
+    @Param('shortUrl') shortUrl: string
   ) {
     try {
       await this.shortenedUrlService.updateNumberAccessUrl(shortUrl);
@@ -63,11 +63,11 @@ export class ShortenedUrlController {
     }
   }
 
-  @Get("/find/:shortenedUrlId")
+  @Get('/find/:shortenedUrlId')
   async findOneShortenedUrlByUser(
     @Res() response: Response,
     @AuthenticatedUser() currentUser: UserEntity,
-    @Param("shortenedUrlId") shortenedUrlId: string
+    @Param('shortenedUrlId') shortenedUrlId: string
   ) {
     try {
       const data = await this.shortenedUrlService.findOneShortenedUrlByUser(
@@ -81,11 +81,11 @@ export class ShortenedUrlController {
     }
   }
 
-  @Patch(":shortenedUrlId")
+  @Patch(':shortenedUrlId')
   async updateUrlOriginByUser(
     @Res() response: Response,
     @AuthenticatedUser() currentUser: UserEntity,
-    @Param("shortenedUrlId") shortenedUrlId: string,
+    @Param('shortenedUrlId') shortenedUrlId: string,
     @Body() updateShortenedUrlDto: UpdateShortenedUrlDto
   ) {
     try {
@@ -101,14 +101,14 @@ export class ShortenedUrlController {
     }
   }
 
-  @Delete(":shortenedUrlId")
+  @Delete(':shortenedUrlId')
   async removeShortenedUrlByUser(
     @Res() response: Response,
     @AuthenticatedUser() currentUser: UserEntity,
-    @Param("shortenedUrlId") shortenedUrlId: string
+    @Param('shortenedUrlId') shortenedUrlId: string
   ) {
     try {
-      const data = await this.shortenedUrlService.removeShortenedUrlByUser(
+      await this.shortenedUrlService.removeShortenedUrlByUser(
         currentUser.id,
         shortenedUrlId
       );

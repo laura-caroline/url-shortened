@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { UserEntity } from '../user/entities/user.entity';
 
@@ -7,10 +6,7 @@ import { UserEntity } from '../user/entities/user.entity';
 export class AuthRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async updateRefreshToken(
-    userId: string,
-    refreshToken: string,
-  ) {
+  async updateRefreshToken(userId: string, refreshToken: string) {
     return await this.prisma.user.update({
       where: {
         id: userId,
@@ -29,5 +25,4 @@ export class AuthRepository {
       },
     });
   }
-
 }

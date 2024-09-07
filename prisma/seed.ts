@@ -1,18 +1,18 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import { IDataUserDefault } from "./seed.interface";
-import { hashData } from "src/utils/hash";
+import { Prisma, PrismaClient } from '@prisma/client';
+import { IDataUserDefault } from './seed.interface';
+import { hashData } from 'src/utils/hash';
 
 const dataUserDefault: IDataUserDefault = {
-  email: "userdefault@gmail.com",
-  password: "userdefault",
-  name: "USER DEFAULT",
+  email: 'userdefault@gmail.com',
+  password: 'userdefault',
+  name: 'USER DEFAULT',
 };
 const prisma = new PrismaClient();
 
 const createUserDefault = async () => {
   try {
     const passwordEncrypted = await hashData(dataUserDefault.password);
-    console.log("Seeding base...");
+    console.log('Seeding base...');
     await prisma.user.upsert({
       where: {
         email: dataUserDefault.email,
@@ -29,7 +29,7 @@ const createUserDefault = async () => {
       },
     });
   } catch (error) {
-    console.log("Error seed", error);
+    console.log('Error seed', error);
   }
 };
 

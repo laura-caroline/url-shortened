@@ -11,13 +11,11 @@ export class LocalAuthGuard extends AuthGuard('local') {
     return super.canActivate(context);
   }
 
-  handleRequest(err, user, info, context) {
+  handleRequest(err, user) {
     if (err) throw err;
 
     if (!user) {
-      throw new UnauthorizedException(
-        'E-mail e/ou senha inválidos'
-      );
+      throw new UnauthorizedException('E-mail e/ou senha inválidos');
     }
 
     return user;

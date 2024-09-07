@@ -3,16 +3,16 @@ import {
   Logger,
   NotFoundException,
   UnauthorizedException,
-} from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { UserEntity } from "src/modules/user/entities/user.entity";
-import { UserService } from "src/modules/user/user.service";
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { UserService } from 'src/modules/user/user.service';
 
-import { hashData } from "src/utils/hash";
-import { UserToken } from "../user/dto/response/userToken.dto";
-import { AuthRepository } from "./auth.repository";
-import { LoginDto } from "./dto/request/login.dto";
-import * as bcrypt from "bcrypt";
+import { hashData } from 'src/utils/hash';
+import { UserToken } from '../user/dto/response/userToken.dto';
+import { AuthRepository } from './auth.repository';
+import { LoginDto } from './dto/request/login.dto';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   private logger = new Logger(AuthService.name);
@@ -25,10 +25,7 @@ export class AuthService {
 
   async updateRefreshToken(userId: string, refreshToken: string) {
     const refreshTokenHash = await hashData(refreshToken);
-    const user = await this.authRepository.updateRefreshToken(
-      userId,
-      refreshTokenHash
-    );
+    await this.authRepository.updateRefreshToken(userId, refreshTokenHash);
     return refreshTokenHash;
   }
 
@@ -50,6 +47,7 @@ export class AuthService {
   }
 
   async getTokens(user: UserEntity) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...userWithoutPassword } = user;
 
     const payload = {
@@ -96,11 +94,12 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
 
     if (!user) {
-      throw new UnauthorizedException("E-mail e/ou senha inválidos");
+      throw new UnauthorizedException('E-mail e/ou senha inválidos');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (isPasswordValid) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...userWithoutPassword } = user;
       return userWithoutPassword;
     }
