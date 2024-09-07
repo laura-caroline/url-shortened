@@ -1,0 +1,41 @@
+// Base Class must contain 
+// "id", "version", "createdAt", "updatedAt", "deletedAt", "status"
+// Quando criar a entidade, criar o enum da assignment com o mesmo nome só que tudo maisculo
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String         @id @default(uuid())
+  name         String         @db.VarChar(255)
+  email        String         @unique @db.VarChar(255)
+  password     String?        @db.VarChar(255)
+  createdAt    DateTime       @default(now())
+  refreshToken String?        @db.VarChar(255)
+  updatedAt    DateTime?
+  deletedAt    DateTime?
+  ShortenedUrl ShortenedUrl[]
+
+  @@map("TB_USER")
+}
+
+model ShortenedUrl {
+  id             String    @id @default(uuid())
+  originalUrl    String    @db.VarChar(255)
+  shortUrl       String    @unique @db.VarChar(255)
+  userId         String?   @db.VarChar()
+  User           User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime  @default(now())
+  countAccessUrl Int       @default(0)
+  refreshToken   String?   @db.VarChar(255)
+  updatedAt      DateTime?
+  deletedAt      DateTime?
+
+  @@map("TB_SHORTENED_URL")
+}
