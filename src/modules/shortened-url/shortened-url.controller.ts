@@ -1,23 +1,22 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  Res,
-  UseGuards,
+  Get,
   HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Res,
 } from "@nestjs/common";
-import { ShortenedUrlService } from "./shortened-url.service";
+import { Response } from "express";
+import { handleError } from "src/utils/handlerError";
+import { AuthenticatedUser } from "../auth/decorators/current-user.decorator";
+import { IsPublic } from "../auth/decorators/is-public.decorator";
+import { UserEntity } from "../user/entities/user.entity";
 import { CreateShortenedUrlDto } from "./dto/request/create-shortened-url.dto";
 import { UpdateShortenedUrlDto } from "./dto/request/update-shortened-url.dto";
-import { AuthenticatedUser } from "../auth/decorators/current-user.decorator";
-import { UserEntity } from "../user/entities/user.entity";
-import { IsPublic } from "../auth/decorators/is-public.decorator";
-import { handleError } from "src/utils/handlerError";
-import { Response } from "express";
+import { ShortenedUrlService } from "./shortened-url.service";
 
 @Controller("shortenedUrl")
 export class ShortenedUrlController {
@@ -27,11 +26,9 @@ export class ShortenedUrlController {
   @IsPublic()
   async createShortenedUrl(
     @Res() response: Response,
-    @AuthenticatedUser() currentUser: UserEntity,
     @Body() createShortenedUrlDto: CreateShortenedUrlDto
   ) {
     try {
-      createShortenedUrlDto.userId = currentUser?.id;
       await this.shortenedUrlService.createShortenedUrl(createShortenedUrlDto);
       return response.status(HttpStatus.CREATED).send();
     } catch (err) {
@@ -42,12 +39,11 @@ export class ShortenedUrlController {
   @IsPublic()
   async redirectAndUpdateNumbersAccessUrl(
     @Res() response: Response,
-    @Param("shortenedUrlId") shortenedUrlId: string
+    @Param("shortUrl") shortUrl: string
   ) {
     try {
-      const updateNumberAccessUrl =
-        await this.shortenedUrlService.updateNumberAccessUrl(shortenedUrlId);
-      return response.redirect(updateNumberAccessUrl.originalUrl);
+      await this.shortenedUrlService.updateNumberAccessUrl(shortUrl);
+      return response.status(200).send();
     } catch (err) {
       return handleError(response, err);
     }
@@ -86,7 +82,7 @@ export class ShortenedUrlController {
   }
 
   @Patch(":shortenedUrlId")
-  async updateShortenedUrlByUser(
+  async updateUrlOriginByUser(
     @Res() response: Response,
     @AuthenticatedUser() currentUser: UserEntity,
     @Param("shortenedUrlId") shortenedUrlId: string,
@@ -94,7 +90,7 @@ export class ShortenedUrlController {
   ) {
     try {
       updateShortenedUrlDto.idShortenedUrl = shortenedUrlId;
-      const data = await this.shortenedUrlService.updateShortenedUrlByUser(
+      const data = await this.shortenedUrlService.updateUrlOriginByUser(
         currentUser.id,
         updateShortenedUrlDto
       );

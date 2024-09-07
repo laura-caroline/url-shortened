@@ -1,20 +1,35 @@
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { ShortenedUrlRepository } from "./shortened-url.repository";
-import { UpdateShortenedUrlDto } from "./dto/request/update-shortened-url.dto";
+import { UserService } from "../user/user.service";
 import { CreateShortenedUrlDto } from "./dto/request/create-shortened-url.dto";
-import { randomUUID } from "crypto";
+import { UpdateShortenedUrlDto } from "./dto/request/update-shortened-url.dto";
+import { ShortenedUrlRepository } from "./shortened-url.repository";
+import { generateRandomLetters } from "src/utils/generateRandomLetters";
 
 @Injectable()
 export class ShortenedUrlService {
   private logger = new Logger(ShortenedUrlService.name);
 
   constructor(
-    private readonly shortenedUrlRepository: ShortenedUrlRepository
+    private readonly shortenedUrlRepository: ShortenedUrlRepository,
+    private readonly userService: UserService
   ) {}
 
   async createShortenedUrl(createShortenedUrlDto: CreateShortenedUrlDto) {
     try {
-      createShortenedUrlDto.shortUrl = randomUUID();
+      createShortenedUrlDto.shortUrl = generateRandomLetters();
+      if (createShortenedUrlDto.userId) {
+        const user = await this.userService.findById(
+          createShortenedUrlDto.userId
+        );
+        if (!user) {
+          this.logger.debug(
+            `Usuário com id ${createShortenedUrlDto.userId} não foi encontrado `
+          );
+          throw new NotFoundException(
+            `Usuário com id ${createShortenedUrlDto.userId} não foi encontrado`
+          );
+        }
+      }
       return await this.shortenedUrlRepository.createShortenedUrl(
         createShortenedUrlDto
       );
@@ -51,14 +66,12 @@ export class ShortenedUrlService {
     }
   }
 
-  async updateNumberAccessUrl(idShortenedUrl: string) {
+  async updateNumberAccessUrl(shortUrl: string) {
     const alreadyExistShortenedUrl =
-      await this.shortenedUrlRepository.findById(idShortenedUrl);
+      await this.shortenedUrlRepository.findByShortUrl(shortUrl);
 
     if (!alreadyExistShortenedUrl) {
-      this.logger.debug(
-        `URL encurtada com id ${idShortenedUrl} não foi encontrada`
-      );
+      this.logger.debug(`URL encurtada ${shortUrl} não foi encontrada`);
       throw new NotFoundException("URL encurtada não foi encontrada");
     }
 
@@ -68,13 +81,13 @@ export class ShortenedUrlService {
       idShortenedUrl: alreadyExistShortenedUrl.id,
     };
 
-    return await this.shortenedUrlRepository.updateShortenedUrl(
+    return await this.shortenedUrlRepository.updateNumberAccessUrl(
       null,
       dataUpdate
     );
   }
 
-  async updateShortenedUrlByUser(
+  async updateUrlOriginByUser(
     userId: string,
     updateShortenedUrlDto: UpdateShortenedUrlDto
   ) {
@@ -91,8 +104,7 @@ export class ShortenedUrlService {
         );
         throw new NotFoundException("URL encurtada não foi encontrada");
       }
-      updateShortenedUrlDto.shortUrl = randomUUID();
-      return await this.shortenedUrlRepository.updateShortenedUrl(
+      return await this.shortenedUrlRepository.updateUrlOriginByUser(
         userId,
         updateShortenedUrlDto
       );

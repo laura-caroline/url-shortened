@@ -15,11 +15,12 @@ export class ShortenedUrlRepository {
       data: {
         originalUrl: data.originalUrl,
         shortUrl: data.shortUrl,
+        ...(data.userId && { userId: data.userId }),
       },
     });
   }
 
-  async updateShortenedUrl(
+  async updateNumberAccessUrl(
     userId: string,
     data: UpdateShortenedUrlDto
   ): Promise<ShortenedUrlEntity> {
@@ -36,11 +37,27 @@ export class ShortenedUrlRepository {
     });
   }
 
-  async findById(idShortenedUrl: string): Promise<ShortenedUrlEntity> {
+  async updateUrlOriginByUser(
+    userId: string,
+    data: UpdateShortenedUrlDto
+  ): Promise<ShortenedUrlEntity> {
+    return await this.prisma.shortenedUrl.update({
+      where: {
+        ...(userId && { userId }),
+        id: data.idShortenedUrl,
+        deletedAt: null,
+      },
+      data: {
+        originalUrl: data.originalUrl,
+        updatedAt: new Date(),
+      },
+    });
+  }
+
+  async findByShortUrl(shortUrl: string) {
     return await this.prisma.shortenedUrl.findFirst({
       where: {
-        id: idShortenedUrl,
-        deletedAt: null,
+        shortUrl: shortUrl,
       },
     });
   }

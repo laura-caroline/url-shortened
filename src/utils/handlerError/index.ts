@@ -1,7 +1,7 @@
 import { NotFoundError } from "rxjs";
 import { UnauthorizedError } from "src/modules/auth/errors/unauthorized.error";
 import { Response } from "express";
-import { HttpStatus } from "@nestjs/common";
+import { HttpStatus, NotFoundException } from "@nestjs/common";
 
 export const handleError = (response: Response, error: any) => {
   if (error instanceof UnauthorizedError) {
@@ -9,7 +9,7 @@ export const handleError = (response: Response, error: any) => {
       error: "Unauthorized access",
       details: error.message,
     });
-  } else if (error instanceof NotFoundError) {
+  } else if (error instanceof NotFoundException) {
     return response.status(HttpStatus.NOT_FOUND).json({
       error: "Resource not found",
       details: error.message,
