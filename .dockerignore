@@ -1,0 +1,29 @@
+# Ignorar diretórios de dependências
+node_modules/
+vendor/
+
+# Ignorar arquivos de controle de versão
+.git
+.gitignore
+
+# Ignorar logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignorar arquivos temporários ou de sistema
+*.swp
+*.bak
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Ignorar builds
+dist/
+build/
+
+# Ignorar arquivos Dockerfile locais ou personalizados
+docker-compose.yml
+Dockerfile.*
