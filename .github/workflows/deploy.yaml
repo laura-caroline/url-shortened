@@ -33,15 +33,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - name: Update kubeconfig for AWS EKS
-        run: |
-          aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $CLUSTER_NAME
-
       - name: Install dependencies
         run: npm install
 
       - name: Generate types from new Prisma schema
         run: npx prisma generate
+
+      - name: Run local tests before building Docker image # <--- Adicionado para rodar testes antes de buildar
+        run: npm run test
 
       - name: Log in to Amazon ECR
         id: login-ecr
@@ -52,6 +51,10 @@ jobs:
           docker build -t $AWS_ECR_REPOSITORY:$IMAGE_TAG .
           docker tag $AWS_ECR_REPOSITORY:$IMAGE_TAG $AWS_ECR_URI:$IMAGE_TAG
           docker push $AWS_ECR_URI:$IMAGE_TAG
+
+      - name: Update kubeconfig for AWS EKS
+        run: |
+          aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $CLUSTER_NAME
 
       - name: Update Kubernetes deployment
         run: |
