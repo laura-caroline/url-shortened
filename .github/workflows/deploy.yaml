@@ -15,6 +15,7 @@ jobs:
       IMAGE_TAG: ${{ github.sha }}
       CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
       - name: Checkout repository
