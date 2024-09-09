@@ -42,6 +42,10 @@ jobs:
       - name: Run local tests before building Docker image # <--- Adicionado para rodar testes antes de buildar
         run: npm run test
 
+      - name: Run Prisma migrations in the Kubernetes pod
+        run: |
+          kubectl exec $POD_NAME -- npx prisma migrate deploy
+
       - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -60,19 +64,6 @@ jobs:
         run: |
           kubectl set image deployment/nest-app nest-app=$AWS_ECR_URI:$IMAGE_TAG
           kubectl rollout status deployment/nest-app
-
-      - name: Get the running pod name
-        run: |
-          POD_NAME=$(kubectl get pods -l app=nest-app -o jsonpath="{.items[0].metadata.name}")
-          echo "POD_NAME=$POD_NAME" >> $GITHUB_ENV
-
-      - name: Run Prisma migrations in the Kubernetes pod
-        run: |
-          kubectl exec $POD_NAME -- npx prisma migrate deploy
-
-      - name: Run tests in the Kubernetes pod
-        run: |
-          kubectl exec $POD_NAME -- npm run test
 
       - name: Verify deployment
         run: kubectl get pods
