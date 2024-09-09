@@ -29,7 +29,7 @@ async function bootstrap() {
       type: 'http',
       bearerFormat: 'JWT',
       description:
-        'Enter JWT token in format "{TOKEN}" without "Bearer/bearer"',
+        'Coloque o jwt token no formato "{TOKEN}" sem o "Bearer/bearer"',
       scheme: 'bearer',
       in: 'header',
       name: 'Authorization',
