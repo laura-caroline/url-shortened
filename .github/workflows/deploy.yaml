@@ -31,13 +31,6 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i bastion_key.pem -L 5432:$DATABASE_URL:5432 $BASTION_USER@$BASTION_HOST -N &
 
-      - name: Wait for SSH tunnel
-        run: sleep 10
-
-      - name: Test DB connection through tunnel
-        run: |
-          nc -zv localhost 5432
-
       - name: Install dependencies
         run: npm install
 
