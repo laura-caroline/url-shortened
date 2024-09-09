@@ -13,11 +13,10 @@ jobs:
       AWS_ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
       AWS_ECR_URI: ${{ secrets.AWS_ECR_URI }}
       IMAGE_TAG: ${{ github.sha }}
-      DATABASE_URL: 'postgresql://<username>:<password>@localhost:5432/<dbname>?schema=public'
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
       BASTION_SSH_KEY: ${{ secrets.BASTION_SSH_KEY }}
       BASTION_HOST: ${{ secrets.BASTION_HOST }}
       BASTION_USER: ${{ secrets.BASTION_USER }}
-      RDS_HOST: ${{ secrets.RDS_HOST }}
 
     steps:
       - name: Checkout repository
@@ -30,7 +29,7 @@ jobs:
 
       - name: Create SSH tunnel to Bastion
         run: |
-          ssh -o StrictHostKeyChecking=no -i bastion_key.pem -L 5432:$RDS_HOST:5432 $BASTION_USER@$BASTION_HOST -N &
+          ssh -o StrictHostKeyChecking=no -i bastion_key.pem -L 5432:$DATABASE_URL:5432 $BASTION_USER@$BASTION_HOST -N &
 
       - name: Wait for SSH tunnel
         run: sleep 10
