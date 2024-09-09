@@ -58,13 +58,18 @@ jobs:
           kubectl set image deployment/nest-app nest-app=$AWS_ECR_URI:$IMAGE_TAG
           kubectl rollout status deployment/nest-app
 
+      - name: Get the running pod name
+        run: |
+          POD_NAME=$(kubectl get pods -l app=nest-app -o jsonpath="{.items[0].metadata.name}")
+          echo "POD_NAME=$POD_NAME" >> $GITHUB_ENV
+
       - name: Run Prisma migrations in the Kubernetes pod
         run: |
-          npx prisma migrate deploy
+          kubectl exec $POD_NAME -- npx prisma migrate deploy
 
       - name: Run tests in the Kubernetes pod
         run: |
-          npm run test
+          kubectl exec $POD_NAME -- npm run test
 
       - name: Verify deployment
         run: kubectl get pods
