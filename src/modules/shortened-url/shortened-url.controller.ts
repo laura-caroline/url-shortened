@@ -17,11 +17,14 @@ import { UserEntity } from '../user/entities/user.entity';
 import { CreateShortenedUrlDto } from './dto/request/create-shortened-url.dto';
 import { UpdateShortenedUrlDto } from './dto/request/update-shortened-url.dto';
 import { ShortenedUrlService } from './shortened-url.service';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('shortenedUrl')
+@ApiTags('ShortenedUrl')
 export class ShortenedUrlController {
   constructor(private readonly shortenedUrlService: ShortenedUrlService) {}
 
+  @ApiOperation({ summary: 'Criar url encurtada' })
   @Post()
   @IsPublic()
   async createShortenedUrl(
@@ -29,12 +32,18 @@ export class ShortenedUrlController {
     @Body() createShortenedUrlDto: CreateShortenedUrlDto
   ) {
     try {
-      await this.shortenedUrlService.createShortenedUrl(createShortenedUrlDto);
-      return response.status(HttpStatus.CREATED).send();
+      const createShortenedUrl =
+        await this.shortenedUrlService.createShortenedUrl(
+          createShortenedUrlDto
+        );
+      return response.status(HttpStatus.CREATED).send(createShortenedUrl.id);
     } catch (err) {
       return handleError(response, err);
     }
   }
+  @ApiOperation({
+    summary: 'Ao visitar a url encurtada, atualizar numero de acesso',
+  })
   @Get(':shortUrl')
   @IsPublic()
   async redirectAndUpdateNumbersAccessUrl(
@@ -48,6 +57,10 @@ export class ShortenedUrlController {
       return handleError(response, err);
     }
   }
+
+  @ApiOperation({
+    summary: 'Obter urls encurtadas do usuário autenticado',
+  })
   @Get()
   async findAllShortenedUrlByUser(
     @Res() response: Response,
@@ -63,6 +76,9 @@ export class ShortenedUrlController {
     }
   }
 
+  @ApiOperation({
+    summary: 'Obter url encurtada do usuário autenticado',
+  })
   @Get('/find/:shortenedUrlId')
   async findOneShortenedUrlByUser(
     @Res() response: Response,
@@ -81,6 +97,9 @@ export class ShortenedUrlController {
     }
   }
 
+  @ApiOperation({
+    summary: 'Editar origem da url encurtada ',
+  })
   @Patch(':shortenedUrlId')
   async updateUrlOriginByUser(
     @Res() response: Response,
@@ -101,6 +120,9 @@ export class ShortenedUrlController {
     }
   }
 
+  @ApiOperation({
+    summary: 'Remover url encurtada',
+  })
   @Delete(':shortenedUrlId')
   async removeShortenedUrlByUser(
     @Res() response: Response,

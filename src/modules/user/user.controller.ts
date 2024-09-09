@@ -21,7 +21,7 @@ export class UserController {
   private readonly logger = new Logger(UserController.name);
   constructor(protected readonly userService: UserService) {}
 
-  @ApiOperation({ summary: 'Create user' })
+  @ApiOperation({ summary: 'Criar usuário' })
   @ApiResponse({
     status: HttpStatus.CREATED,
   })
