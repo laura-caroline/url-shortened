@@ -60,11 +60,11 @@ jobs:
 
       - name: Run Prisma migrations in the Kubernetes pod
         run: |
-          kubectl exec deployment/nest-app -- npx prisma migrate deploy
+          npx prisma migrate deploy
 
       - name: Run tests in the Kubernetes pod
         run: |
-          kubectl exec deployment/nest-app -- npm run test
+          npm run test
 
       - name: Verify deployment
         run: kubectl get pods
