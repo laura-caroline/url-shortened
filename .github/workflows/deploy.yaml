@@ -17,19 +17,20 @@ jobs:
       BASTION_SSH_KEY: ${{ secrets.BASTION_SSH_KEY }}
       BASTION_HOST: ${{ secrets.BASTION_HOST }}
       BASTION_USER: ${{ secrets.BASTION_USER }}
+      RDS_HOST: ${{ secrets.RDS_HOST }} # Adicione o host do RDS aqui
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Save SSH key to file
+      - name: Create SSH key file
         run: |
-          echo "${{ secrets.BASTION_SSH_KEY }}" > /tmp/ssh_key
-          chmod 400 /tmp/ssh_key
+          echo "${{ secrets.BASTION_SSH_KEY }}" > bastion_key.pem
+          chmod 600 bastion_key.pem
 
-      - name: Test SSH Connectivity
+      - name: Create SSH tunnel to Bastion
         run: |
-          ssh -vvv -o StrictHostKeyChecking=no -i /tmp/ssh_key $BASTION_USER@$BASTION_HOST "echo 'SSH Connection Successful'"
+          ssh -o StrictHostKeyChecking=no -i bastion_key.pem -L 5432:$RDS_HOST:5432 $BASTION_USER@$BASTION_HOST -N &
 
       - name: Install dependencies
         run: npm install
