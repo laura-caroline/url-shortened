@@ -42,7 +42,7 @@ jobs:
 
       - name: Run unit tests
         run: |
-          docker run $AWS_ECR_URI:$IMAGE_TAG npm run test
+          npm run test
 
       - name: Update Kubernetes deployment
         run: |
