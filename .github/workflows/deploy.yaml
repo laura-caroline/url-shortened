@@ -24,9 +24,6 @@ jobs:
       - name: Run lint
         run: npm run lint
 
-      - name: Run unit tests
-        run: npm run test
-
       - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -36,6 +33,10 @@ jobs:
           docker build -t $AWS_ECR_REPOSITORY:$IMAGE_TAG .
           docker tag $AWS_ECR_REPOSITORY:$IMAGE_TAG $AWS_ECR_URI:$IMAGE_TAG
           docker push $AWS_ECR_URI:$IMAGE_TAG
+
+      - name: Run unit tests
+        run: |
+          docker run $AWS_ECR_URI:$IMAGE_TAG npm run test
 
       - name: Update Kubernetes deployment
         run: |
