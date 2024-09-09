@@ -12,7 +12,8 @@ jobs:
     env:
       AWS_ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
       AWS_ECR_URI: ${{ secrets.AWS_ECR_URI }}
-      IMAGE_TAG: ${{ github.sha }} # Usando o SHA do commit como tag de imagem
+      IMAGE_TAG: ${{ github.sha }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
       - name: Checkout repository
@@ -21,10 +22,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Generate types new schema prisma
+      - name: Generate types from new Prisma schema
         run: npx prisma generate
 
-      - name: Apply migrations
+      - name: Apply Prisma migrations
         run: npx prisma migrate deploy
 
       - name: Run lint
@@ -40,6 +41,7 @@ jobs:
       - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+
       - name: Build, tag, and push Docker image
         run: |
           docker build -t $AWS_ECR_REPOSITORY:$IMAGE_TAG .
@@ -47,8 +49,7 @@ jobs:
           docker push $AWS_ECR_URI:$IMAGE_TAG
 
       - name: Run unit tests
-        run: |
-          npm run test
+        run: npm run test
 
       - name: Update Kubernetes deployment
         run: |
@@ -56,5 +57,4 @@ jobs:
           kubectl rollout status deployment/nest-app
 
       - name: Verify deployment
-        run: |
-          kubectl get pods
+        run: kubectl get pods
