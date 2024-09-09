@@ -1,5 +1,4 @@
-FROM node:20
-
+FROM --platform=linux/amd64 node:20
 
 WORKDIR /app
 
@@ -15,6 +14,7 @@ CMD ["npm", "run", "start"]
 
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 
+USER root
 RUN chmod +x /docker-entrypoint.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

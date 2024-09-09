@@ -6,6 +6,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AtGuard } from './modules/auth/guards';
 import { ShortenedUrlModule } from './modules/shortened-url/shortened-url.module';
 import { UserModule } from './modules/user/user.module';
+import { HealthModule } from './modules/health/health.module';
 
 export const THROTTLER_LIMIT = 10;
 
@@ -23,6 +24,7 @@ export const THROTTLER_LIMIT = 10;
     }),
     UserModule,
     AuthModule,
+    HealthModule,
     ShortenedUrlModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: AtGuard }],
