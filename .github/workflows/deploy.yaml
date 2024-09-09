@@ -14,10 +14,22 @@ jobs:
       AWS_ECR_URI: ${{ secrets.AWS_ECR_URI }}
       IMAGE_TAG: ${{ github.sha }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      BASTION_SSH_KEY: ${{ secrets.BASTION_SSH_KEY }}
+      BASTION_HOST: ${{ secrets.BASTION_HOST }}
+      BASTION_USER: ${{ secrets.BASTION_USER }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Save SSH key to file
+        run: |
+          echo "${{ secrets.BASTION_SSH_KEY }}" > /tmp/ssh_key
+          chmod 400 /tmp/ssh_key
+
+      - name: Test SSH Connectivity
+        run: |
+          ssh -vvv -o StrictHostKeyChecking=no -i /tmp/ssh_key $BASTION_USER@$BASTION_HOST "echo 'SSH Connection Successful'"
 
       - name: Install dependencies
         run: npm install
