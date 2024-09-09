@@ -12,7 +12,7 @@ import { hashData } from 'src/utils/hash';
 import { UserToken } from '../user/dto/response/userToken.dto';
 import { AuthRepository } from './auth.repository';
 import { LoginDto } from './dto/request/login.dto';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 @Injectable()
 export class AuthService {
   private logger = new Logger(AuthService.name);

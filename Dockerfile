@@ -1,25 +1,29 @@
-# Use a imagem oficial do Node.js
-FROM --platform=linux/amd64 node:lts-alpine
+FROM node:20
 
-# Define o diretório de trabalho no container
-WORKDIR /usr/src/nestjs-app
+RUN mkdir -p /app/node_modules && chown -R node:node /app
 
+WORKDIR /app
 
-# Copia todos os arquivos da aplicação para o container
-COPY . .
+COPY --chown=node:node package*.json ./
 
-# Instala as dependências, incluindo o Nodemon
+USER node
+
+COPY --chown=node:node . .
+
 RUN npm install
+
+COPY ./.env /.env
 
 RUN npx prisma generate
 
-RUN npx prisma deploy
-
-RUN npm run seed
-
-# Expõe a porta que a aplicação usará (ajuste conforme necessário)
 EXPOSE 3000
 
-# Define o comando de inicialização da aplicação
-# O comando usa o nodemon para reiniciar a aplicação ao detectar mudanças nos arquivos
 CMD ["npm", "run", "start"]
+
+COPY ./docker-entrypoint.sh /docker-entrypoint.sh
+
+USER root
+RUN chmod +x /docker-entrypoint.sh
+USER node
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
