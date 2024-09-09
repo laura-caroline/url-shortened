@@ -39,12 +39,8 @@ jobs:
       - name: Generate types from new Prisma schema
         run: npx prisma generate
 
-      - name: Run local tests before building Docker image # <--- Adicionado para rodar testes antes de buildar
+      - name: Run local tests before building Docker image
         run: npm run test
-
-      - name: Run Prisma migrations in the Kubernetes pod
-        run: |
-          npx prisma migrate deploy
 
       - name: Log in to Amazon ECR
         id: login-ecr
