@@ -44,7 +44,7 @@ jobs:
 
       - name: Run Prisma migrations in the Kubernetes pod
         run: |
-          kubectl exec $POD_NAME -- npx prisma migrate deploy
+          npx prisma migrate deploy
 
       - name: Log in to Amazon ECR
         id: login-ecr
