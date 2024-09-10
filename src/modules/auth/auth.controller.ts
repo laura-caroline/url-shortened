@@ -1,23 +1,32 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Response } from 'express';
 
+import { handleError } from 'src/utils/handlerError';
 import { UserToken } from '../user/dto/response/userToken.dto';
+import { UserEntity } from '../user/entities/user.entity';
 import { AuthService } from './auth.service';
+import { AuthenticatedUser } from './decorators/current-user.decorator';
 import { IsPublic } from './decorators/is-public.decorator';
 import { LoginDto } from './dto/request/login.dto';
 import { RefreshTokenDto } from './dto/request/updateRefreshToken.dto';
-import { LocalAuthGuard } from './guards';
-import { handleError } from 'src/utils/handlerError';
+import { AtGuard, LocalAuthGuard } from './guards';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -62,5 +71,19 @@ export class AuthController {
     } catch (err) {
       return handleError(response, err);
     }
+  }
+
+  @ApiOperation({ summary: 'Current user information' })
+  @UseGuards(AtGuard)
+  @ApiResponse({ status: HttpStatus.OK })
+  @Get('me')
+  @ApiBearerAuth()
+  async getMe(
+    @AuthenticatedUser() currentUser: UserEntity,
+    @Res() response: Response
+  ) {
+    const usuarioDB = await this.authService.getMe(currentUser);
+
+    return response.status(HttpStatus.OK).json(usuarioDB);
   }
 }

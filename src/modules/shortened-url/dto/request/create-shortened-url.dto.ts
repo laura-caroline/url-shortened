@@ -12,6 +12,11 @@ export class CreateShortenedUrlDto {
   @IsOptional()
   shortUrl?: string;
 
+  @ApiProperty({
+    example: 'a995cb05-a2cd-40ba-a29c-11b375cf8184',
+    description: 'Id do usuário',
+    required: false,
+  })
   @IsOptional()
   userId?: string;
 }

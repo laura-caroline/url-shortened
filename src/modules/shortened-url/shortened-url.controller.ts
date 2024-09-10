@@ -17,7 +17,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { CreateShortenedUrlDto } from './dto/request/create-shortened-url.dto';
 import { UpdateShortenedUrlDto } from './dto/request/update-shortened-url.dto';
 import { ShortenedUrlService } from './shortened-url.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('shortenedUrl')
 @ApiTags('ShortenedUrl')
@@ -62,6 +62,7 @@ export class ShortenedUrlController {
     summary: 'Obter urls encurtadas do usuário autenticado',
   })
   @Get()
+  @ApiBearerAuth()
   async findAllShortenedUrlByUser(
     @Res() response: Response,
     @AuthenticatedUser() currentUser: UserEntity
@@ -80,6 +81,7 @@ export class ShortenedUrlController {
     summary: 'Obter url encurtada do usuário autenticado',
   })
   @Get('/find/:shortenedUrlId')
+  @ApiBearerAuth()
   async findOneShortenedUrlByUser(
     @Res() response: Response,
     @AuthenticatedUser() currentUser: UserEntity,
@@ -101,6 +103,7 @@ export class ShortenedUrlController {
     summary: 'Editar origem da url encurtada ',
   })
   @Patch(':shortenedUrlId')
+  @ApiBearerAuth()
   async updateUrlOriginByUser(
     @Res() response: Response,
     @AuthenticatedUser() currentUser: UserEntity,
@@ -124,6 +127,7 @@ export class ShortenedUrlController {
     summary: 'Remover url encurtada',
   })
   @Delete(':shortenedUrlId')
+  @ApiBearerAuth()
   async removeShortenedUrlByUser(
     @Res() response: Response,
     @AuthenticatedUser() currentUser: UserEntity,

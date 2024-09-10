@@ -107,4 +107,17 @@ export class AuthService {
     const { password, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
+
+  async getMe(currentUser: UserEntity) {
+    const userDb = (await this.userService.findById(
+      currentUser.id
+    )) as UserEntity;
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...userWithoutPassword } = userDb;
+
+    return {
+      ...userWithoutPassword,
+    };
+  }
 }
