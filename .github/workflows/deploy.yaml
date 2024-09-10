@@ -39,6 +39,8 @@ jobs:
       - name: Generate types from new Prisma schema
         run: npx prisma generate
 
+      - name: Run lint
+        run: npm run lint
       - name: Run local tests before building Docker image
         run: npm run test
 
