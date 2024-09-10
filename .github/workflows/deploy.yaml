@@ -15,7 +15,7 @@ jobs:
       IMAGE_TAG: ${{ github.sha }}
       CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_URL: postgresql://postgres:Z13Tr3lkMlbpb0Thc3XB@database-2.cxewpc2clxtf.us-east-1.rds.amazonaws.com:5432/postgres
 
     steps:
       - name: Checkout repository
