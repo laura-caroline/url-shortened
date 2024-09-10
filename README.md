@@ -6,6 +6,7 @@ Liste as ferramentas e softwares necessários para rodar o projeto:
 
 - Node.js versão 20
 - NPM ou Yarn
+- Docker
 
 ## URL aplicação
 
@@ -31,25 +32,26 @@ http://a6077a97b7ef343babcd6aca84354cf2-1822707660.us-east-1.elb.amazonaws.com/a
    npm install
    ```
 
-5. Subir a aplicação e o banco de dados pelo docker-compose
+5. Crie arquivo .env
+   DATABASE_URL="postgresql://postgres:12345678@db:5432/postgres"
+   AT_SECRET=AT_SECRET
+   RT_SECRET=RT_SECRET
+   JWT_ACCESS_LIFETIME=321423412341234
+   JWT_REFRESH_LIFETIME=321423412341234
+6. Subir a aplicação e o banco de dados pelo docker-compose
 
    ```bash
    docker-compose build
    docker-compose up
    ```
 
-6. Rode os testes:
+6.1 URL local: http://localhost:3000/api/docs
+
+7. Rode os testes:
 
    ```bash
    npm run test
    ```
-
-7. Crie arquivo .env
-   DATABASE_URL="postgresql://postgres:12345678@db:5432/postgres"
-   AT_SECRET=AT_SECRET
-   RT_SECRET=RT_SECRET
-   JWT_ACCESS_LIFETIME=321423412341234
-   JWT_REFRESH_LIFETIME=321423412341234
 
 8. Rodar lint:
 
