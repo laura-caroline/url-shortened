@@ -8,6 +8,7 @@ import { LoginDto } from './dto/request/login.dto';
 import { RefreshTokenDto } from './dto/request/updateRefreshToken.dto';
 import { UserToken } from '../user/dto/response/userToken.dto';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { UserEntity } from '../user/entities/user.entity';
 
 jest.mock('src/utils/handlerError', () => ({
   handleError: jest.fn(),
@@ -21,6 +22,7 @@ describe('AuthController', () => {
   const mockAuthService = {
     login: jest.fn(),
     refresh: jest.fn(),
+    getMe: jest.fn(),
   };
 
   const mockResponse = () => {
@@ -124,6 +126,40 @@ describe('AuthController', () => {
       await controller.refreshToken(refreshTokenDto.refreshToken, response);
 
       expect(handleError).toHaveBeenCalledWith(response, expect.any(Error));
+    });
+
+    it('should return current user information', async () => {
+      const mockUser: UserEntity = {
+        id: '123',
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        password: '',
+        createdAt: undefined,
+        refreshToken: '',
+        updatedAt: undefined,
+        deletedAt: undefined,
+      };
+
+      const usuarioDB = { ...mockUser };
+
+      mockAuthService.getMe.mockResolvedValue(usuarioDB); // Simula o retorno do método getMe
+
+      const reqUser = {
+        ...mockUser,
+        password: '',
+        createdAt: undefined,
+        refreshToken: '',
+        updatedAt: undefined,
+        deletedAt: undefined,
+      };
+
+      const res = mockResponse();
+
+      await controller.getMe(reqUser, res);
+
+      expect(authService.getMe).toHaveBeenCalledWith(reqUser);
+      expect(res.status).toHaveBeenCalledWith(HttpStatus.OK);
+      expect(res.json).toHaveBeenCalledWith(usuarioDB);
     });
   });
 });
