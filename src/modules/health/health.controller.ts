@@ -11,10 +11,4 @@ export class HealthController {
   checkHealth(@Res() response: Response) {
     return response.status(HttpStatus.OK).json();
   }
-
-  @Get('teste')
-  @IsPublic()
-  checkHealthTeste(@Res() response: Response) {
-    return response.status(HttpStatus.OK).json();
-  }
 }
