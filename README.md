@@ -56,7 +56,7 @@ http://a6077a97b7ef343babcd6aca84354cf2-1822707660.us-east-1.elb.amazonaws.com/a
 8. Rodar lint:
 
    ```bash
-   npm run test
+   npm run lint
    ```
 
 Caso não queira subir pelo docker.. 8. Rodar aplicação
